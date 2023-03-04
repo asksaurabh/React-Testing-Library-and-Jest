@@ -13,8 +13,12 @@ test('Render one row per user', () => {
     },
   ];
 
-  render(<UserList users={users} />);
-  const rows = within(screen.getByTestId('users')).getAllByRole('row');
+  const { container } = render(<UserList users={users} />);
+
+  // const rows = within(screen.getByTestId('users')).getAllByRole('row');
+  // eslint-disable-next-line
+  const rows = container.querySelectorAll('tbody tr');
+
   expect(rows).toHaveLength(2);
 });
 
