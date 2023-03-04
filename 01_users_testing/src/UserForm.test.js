@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import user from '@testing-library/user-event';
 import UserForm from './components/UserForm';
 
@@ -39,5 +39,25 @@ test('UserForm calls on onUserAdd when the from is submitted', () => {
   expect(mock).toHaveBeenCalledWith({
     name: 'michael',
     email: 'michael@gmail.com',
+  });
+});
+
+test('it empties the two inputs when form is submitted', async () => {
+  render(<UserForm onUserAdd={() => {}} />);
+
+  const nameInput = screen.getByRole('textbox', { name: /email/i });
+  const emailInput = screen.getByRole('textbox', { name: /email/i });
+  const button = screen.getByRole('button');
+
+  user.click(nameInput);
+  user.keyboard('Jane');
+  user.click(emailInput);
+  user.keyboard('jane@jane.com');
+  user.click(button);
+
+  await waitFor(() => {
+    expect(nameInput).toHaveValue('');
+    // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
+    expect(emailInput).toHaveValue('');
   });
 });
